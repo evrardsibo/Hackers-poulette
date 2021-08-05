@@ -1,3 +1,58 @@
+<?php
+require "./assets/php/country.php";
+
+// if($_SERVER["REQUEST_METHOD"]=="POST"){
+//     $errors = [];
+//     $names = ["name", "lastname", "email", "country", "subject" , "box"];
+//     $values = [];
+//     foreach ($names as $name) {
+//         if (empty($_POST[$name]) && !$name) {
+//           $errors[] = $name;
+//         } else {
+//           $values[$name] = $_POST[$name];
+//         }
+//       }
+    
+//       if (empty($errors)) {
+//         foreach ($names as $name) {
+//           if ($name === "country") {
+//             printf("%s: %s<br />", $name, var_export($_POST[$name], TRUE));
+//           } else {
+//             printf("%s: %s<br />", $name, $_POST[$name]);
+//           }
+//         }
+//         exit;
+//       }
+$errors = [];
+$names = ["name", "lastname", "email", "country", "subject" , "box"];
+$nameopt = ["box"];
+$values = [];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  foreach ($names as $name) {
+    if (empty($_POST[$name]) && !in_array($name, $nameopt)) {
+      $errors[] = $name;
+    } else {
+      $values[$name] = $_POST[$name];
+    }
+  }
+
+  if (empty($errors)) {
+    foreach ($names as $name) {
+      if ($name=== "country") {
+        printf("%s: %s<br />", $name, var_export($_POST[$name], TRUE));
+      } else {
+        printf("%s: %s<br />", $name, $_POST[$name]);
+      }
+    }
+    exit;
+  }
+  
+}
+
+ 
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,57 +82,83 @@
 
               <form id = "valid" accept-charset="UTF-8" autocomplete="off" method="POST" target="_blank"
                     action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                    <fieldset>
                 <div class="form-group">
                     <h1>Support Team</h1>
                     <h3>Contact Form</h3>
                     
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="SIbomana">
+                        <?php if (in_array('name', $errors)): ?>
+                        <span class="error">Fill your Name</span>
+                        <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="lastname">Lastname</label>
                         <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Evrard">
+                        <?php if (in_array("lastname", $errors)): ?>
+                        <span class="error">Fill your Lastname</span>
+                        <?php endif; ?>
                     </div>
                     <div class="form-group">
-                        <label id="sex">Gender</label><br />
-                        <input checked="checked" name="sex" type="radio" id="male" value="male"> Male <br />
-                        <input name="sex" type="radio" id="female" value="female"> Female <br />
-                        <input name="sex" type="radio" id="other" value="other"> Other <br />
+                        <label for="sex">Gender</label><br />
+                        <input checked="checked" name="sex" type="radio" id="male" value="male"> Male <br/>
+                        <input name="sex" type="radio" id="female" value="female"> Female <br/>
+                        <input name="sex" type="radio" id="other" value="other"> Other <br/>
+                        <?php if (in_array("sex", $errors)): ?>
+                        <span class="error">Choose your Gender</span>
+                        <?php endif; ?>
                     </div>
+
                     <div class="input-group flex-nowrap">
                         <span class="input-group-text" id="addon-wrapping">@</span>
                          <input type="email" class="form-control" placeholder="name@example.com" id="mail" name="email">
+                         <?php if (in_array("email", $errors)): ?>
+                        <span class="error">Fill your Mail</span><br/>
+                        <?php endif; ?>
                     </div>
+
                     <div class="form-group">
                         <label for="country">Country</label>
-                        <input type="text" class="form-control" id="country" name="country" placeholder="Belgique">
+                        <select class="form-select" id="country" name="country">
+                        <option value="BE" selected>Belgium</option>
+                        <?php 
+                        foreach($country as $countr){?>
+                        <option value="<?php echo $countr?>"><?php echo $countr?></option>
+                        <?php 
+                        }
+                    ?>
+                        </select>  
                     </div>
                     <div class="form-group">
-                        <label id="subject">Subject</label><br />
-                        <select name="subject" class="form-control">
-                            <option id="other1" value="other">Other</option>
-                            <option id="sales" value="sales">Sales</option>
-                            <option id="it" value="it">IT Support</option>
-                            <option id="change" value="change">Exchange</option>
+                        <label for="subject">Subject</label><br />
+                        <select name="subject" class="form-select">
+                            <option  value="other" selected>Other</option>
+                            <option  value="sales">Sales</option>
+                            <option  value="it">IT Support</option>
+                            <option  value="change">Exchange</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label id="message">Your Message</label>
+                        <label for="message">Your Message</label>
                         <textarea class="form-control" cols="30" rows="5" name="message" placeholder="Your message"></textarea><br /> 
                     </div>
                     <p style="color: red;" id="erreur"></p>
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input type="checkbox" name="box" id="box" value="yes" class="form-check-input">
+                            <input type="checkbox" name="box" id="box" 
+                            <?php if (isset($values["box"]) && $values["box"] == "Yes") echo "checked"; ?>
+                            value="yes" class="form-check-input">
                             I accept the conditions.
                         </label>
                     </div>
-                    <button type="submit" name="submit" class="btn btn-primary" value="Submit">Submit</button>  
+                    <button type="submit" name="submit" class="btn btn-primary" value="Submit">Submit</button> 
+                    </fieldset> 
                 </form>
                 </div>
             </div>
         </div>
     </div>
-    <script src="./assets/js/app.js"></script>
+        <script src="./assets/js/app.js"></script>  
 </body>
 </html>
