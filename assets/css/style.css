@@ -33,3 +33,5 @@ img {
       color: red;
       font-size: 12px;
   }
+  input[type="text"]#website { 
+      display: none; }

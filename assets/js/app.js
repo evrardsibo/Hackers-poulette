@@ -1,12 +1,11 @@
-document.getElementById("valid").addEventListener("submit" , function(e){
-    e.preventDefault();
+function validateform(){
     var erreur ;
     var nom = document.getElementById("name");
     var lastname = document.getElementById("lastname");
     var mail = document.getElementById("mail");
-    var country = document.getElementById("country");
-    if (!country.value) {
-        erreur = "Enter your country please!"
+    let msg = document.forms["valid"]["message"];
+    if (!msg.value) {
+        erreur = "Enter your message please"
     }
     if (!mail.value) {
         erreur = "Enter your mail please!"
@@ -18,10 +17,11 @@ document.getElementById("valid").addEventListener("submit" , function(e){
         erreur = "Enter your name please!"
     }
     if (erreur){
-        e.preventDefault();
+        
         document.getElementById("erreur").innerHTML = erreur;
         return false;
       } else {
-         alert('Formulaire envoyé !');
+         return true;
       }  
-    });
+    
+}
